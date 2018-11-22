@@ -1,5 +1,6 @@
 package com.pinyougou.sellergoods.service.impl;
 
+
 import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.mapper.BrandMapper;
 import com.pinyougou.pojo.TbBrand;

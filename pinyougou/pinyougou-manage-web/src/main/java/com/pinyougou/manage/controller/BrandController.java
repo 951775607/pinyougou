@@ -21,6 +21,7 @@ public class BrandController {
     @Reference
     private BrandService brandService;
 
+
     /**
      * 查询所有品牌数据
      * @return 品牌列表json格式字符串
