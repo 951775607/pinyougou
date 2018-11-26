@@ -8,6 +8,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/specificationOption")
 @RestController
@@ -77,5 +78,7 @@ public class SpecificationOptionController {
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
         return specificationOptionService.search(page, rows, specificationOption);
     }
+
+
 
 }
