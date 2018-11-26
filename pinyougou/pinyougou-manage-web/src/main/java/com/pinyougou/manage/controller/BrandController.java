@@ -8,6 +8,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Date:2018/11/22
@@ -20,6 +21,16 @@ public class BrandController {
     //引入远程的服务对象
     @Reference
     private BrandService brandService;
+
+    /**
+     * 查询品牌列表
+     * @return 品牌列表,数据结构如：[{"id":1,"text":"联想"},{"id":2,"text":"华为"}]
+     */
+    @GetMapping("/selectOptionList")
+    public List<Map> selectOptionList(){
+        return brandService.selectOptionList();
+    }
+
 
     /**
      * 根据条件分页查询
@@ -44,10 +55,10 @@ public class BrandController {
     @GetMapping("/delete")
     public Result delete(Long[] ids) {
         try {
-            brandService.deleteByIds(ids); return Result.ok("删除成功");
+            brandService.deleteByIds(ids); return Result.ok("删除品牌成功");
         } catch (Exception e) { e.printStackTrace();
         }
-        return Result.fail("删除失败");
+        return Result.fail("删除品牌失败");
     }
 
     /**
@@ -61,10 +72,10 @@ public class BrandController {
     @PostMapping("/update")
     public Result update(@RequestBody TbBrand brand) {
         try {
-            brandService.update(brand); return Result.ok("修改成功");
+            brandService.update(brand); return Result.ok("修改品牌成功");
         } catch (Exception e) { e.printStackTrace();
         }
-        return Result.fail("修改失败");
+        return Result.fail("修改品牌失败");
     }
 
 
@@ -75,11 +86,11 @@ public class BrandController {
     public Result add(@RequestBody TbBrand tbBrand) {
         try {
                 brandService.add(tbBrand);
-                return Result.ok("新增成功");
+                return Result.ok("新增品牌成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("保存失败");
+        return Result.fail("保存品牌失败");
     }
 
     /**
@@ -113,14 +124,13 @@ public class BrandController {
     @ResponseBody*/
     @GetMapping("/findAll")
     public List<TbBrand> findAll(){
-        return brandService.queryAll();
+
+//        return brandService.queryAll();
+        return brandService.findAll();
     }
 
     @GetMapping("/findPage")
-    public PageResult findPage(@RequestParam(value = "page", defaultValue =
-            "1")Integer page,
-                               @RequestParam(value = "rows", defaultValue =
-                                       "10")Integer rows) {
+    public PageResult findPage(@RequestParam(value = "page", defaultValue = "1")Integer page, @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
         return brandService.findPage(page, rows);
     }
 }
