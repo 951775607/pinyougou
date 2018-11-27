@@ -45,7 +45,19 @@
       <groupId>javax.servlet</groupId>  
       <artifactId>servlet-api</artifactId>  
       <scope>provided</scope> 
-    </dependency> 
+    </dependency>
+
+
+    <!--spring-security认证框架-->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+    </dependency>
+
   </dependencies>  
   <build> 
     <plugins> 
