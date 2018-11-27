@@ -14,7 +14,14 @@
         <module>pinyougou-dao</module>
         <module>pinyougou-sellergoods</module>
         <module>pinyougou-manage-web</module>
+        <module>pinyougou-shop-web</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+    </dependencies>
     <packaging>pom</packaging>
 
     <!-- 集中定义依赖版本号 -->
