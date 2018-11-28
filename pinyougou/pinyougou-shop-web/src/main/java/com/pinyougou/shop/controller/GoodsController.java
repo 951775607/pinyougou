@@ -3,8 +3,10 @@ package com.pinyougou.shop.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.sellergoods.service.GoodsService;
+import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +29,24 @@ public class GoodsController {
         return goodsService.findPage(page, rows);
     }
 
+    /**
+     * 商品的基本、描述、sku列表信息之后要保存到数据库中
+     * @param goods 商品信息
+     * @return 操作结果
+     */
     @PostMapping("/add")
-    public Result add(@RequestBody TbGoods goods) {
+    public Result add(@RequestBody Goods goods) {
         try {
-            goodsService.add(goods);
+            //设置商家信息
+            String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+            //设置商品id
+            goods.getGoods().setSellerId(sellerId);
+            //设置商品的审核状态
+            goods.getGoods().setAuditStatus("0");
+
+//            goodsService.add(goods);
+            //添加商品
+            goodsService.addGoods(goods);
             return Result.ok("增加成功");
         } catch (Exception e) {
             e.printStackTrace();
