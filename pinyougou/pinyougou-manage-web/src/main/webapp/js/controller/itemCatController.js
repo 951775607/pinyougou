@@ -78,7 +78,9 @@ app.controller("itemCatController", function ($scope, $controller, itemCatServic
 
         switch (grade){
             case 1:
+                //二级商品分类
                 $scope.entity_1 = null;
+                //三级商品分类
                 $scope.entity_2 = null;
                 break;
             case 2:

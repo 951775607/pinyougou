@@ -31,6 +31,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 
             //将使用前端输入的密码与给定的密码进行匹配，如果一致则登录认证成功
+            //返回正确的密码与页面输入的密码匹配
+            // return new User(username, 123456, authorities);
             return new User(username, seller.getPassword(), authorities);
         }
 
