@@ -40,7 +40,7 @@ public class FastDFSTest {
          M00/00/00/wKgMqFmfUHiAcpaMAABw0se6LsY441.jpg
          */
 
-        String[] upload_file = storageClient.upload_file("F:\\JavaCode\\pics_test\\IMG_20170430_091655.jpg", "jpg", null);
+        String[] upload_file = storageClient.upload_file("F:\\JavaCode\\pics_test\\IMG_20170817_145316.jpg", "jpg", null);
         if (upload_file != null && upload_file.length > 1) {
             for (String str : upload_file) {
                 System.out.println(str);

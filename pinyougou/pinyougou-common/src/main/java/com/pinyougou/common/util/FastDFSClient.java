@@ -41,11 +41,8 @@ public class FastDFSClient {
         String[] upload_file = storageClient.upload_file(file_buff, file_ext_name, null);
         if (upload_file != null && upload_file.length > 1) {
             //获取存储服务器信息
-            //获取存储的组名
             String groupName = upload_file[0];
-            //获取文件路径
             String filename = upload_file[1];
-            //获取存储该图片的服务器ip
             ServerInfo[] serverInfos = trackerClient.getFetchStorages(trackerServer, groupName, filename);
 
             //组合可以访问的路径
