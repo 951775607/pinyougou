@@ -13,12 +13,10 @@ import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service(interfaceClass = GoodsService.class)
 public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsService {
@@ -50,6 +48,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         Example example = new Example(TbGoods.class);
         Example.Criteria criteria = example.createCriteria();
+
+        criteria.andNotEqualTo("isDelete", "1");
         /*if(!StringUtils.isEmpty(goods.get***())){
             criteria.andLike("***", "%" + goods.get***() + "%");
         }*/
@@ -171,4 +171,20 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         TbSeller seller = sellerMapper.selectByPrimaryKey(item.getSellerId());
         item.setSeller(seller.getName());
     }
+
+    //根据商品spu_id更新商品的删除状态
+    public void deleteGoodsByIds(Long[] ids) {
+        TbGoods goods = new TbGoods();
+        //设置商品删除状态，删除为1，未删除为0
+        goods.setIsDelete("1");
+        Example example = new Example(TbGoods.class);
+        //Example.Criteria criteria = example.createCriteria();
+        //criteria.andIn("id", Arrays.asList(ids));
+        //添加商品删除信息
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+        //修改商品基本信息表
+        goodsMapper.updateByExampleSelective(goods, example);
+    }
+
+    
 }
