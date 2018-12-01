@@ -15,4 +15,35 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @return 操作结果
      */
     void addGoods(Goods goods);
+
+    /**
+     * 功能描述: 查找一个具体的商品信息
+     *
+     * @param: [id]
+     * @return: com.pinyougou.vo.Goods
+     * @auther: Leon
+     * @date: 2018/12/1 16:38
+     **/
+    Goods findGoodsById(Long id);
+
+
+    /**
+     * 功能描述: 修改商品信息
+     *
+     * @param: [goods]
+     * @return: com.pinyougou.vo.Result
+     * @auther: Leon
+     * @date: 2018/12/1 17:07
+     **/
+    void updateGoods(Goods goods);
+
+    /**
+     * 功能描述:根据商品的spu id数据更新商品的状态
+     *
+     * @param: ids 商品的spu id数组
+     * @return:status 商品的状态
+     * @auther: Leon
+     * @date: 2018/12/1 17:23
+     **/
+    void updateStatus(Long[] ids, String status);
 }

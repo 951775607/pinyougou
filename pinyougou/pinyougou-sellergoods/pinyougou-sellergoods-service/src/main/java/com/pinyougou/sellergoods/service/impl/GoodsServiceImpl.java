@@ -11,6 +11,7 @@ import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
+import org.apache.commons.collections.iterators.ArrayIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,10 +50,23 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         Example example = new Example(TbGoods.class);
         Example.Criteria criteria = example.createCriteria();
 
+        //1. 商家限定
+        //1.1不查询已经标记删除的商品
         criteria.andNotEqualTo("isDelete", "1");
-        /*if(!StringUtils.isEmpty(goods.get***())){
-            criteria.andLike("***", "%" + goods.get***() + "%");
-        }*/
+
+        //添加商家id
+        if(!StringUtils.isEmpty(goods.getSellerId())){
+            criteria.andEqualTo("sellerId", goods.getSellerId());
+        }
+        //添加商品审核状态信息
+        if (!StringUtils.isEmpty(goods.getAuditStatus())) {
+            criteria.andEqualTo("auditStatus", goods.getAuditStatus());
+        }
+        //添加商品的名称模糊查询
+        if (!StringUtils.isEmpty(goods.getGoodsName())) {
+            criteria.andLike("goodsName", goods.getGoodsName());
+        }
+
 
         List<TbGoods> list = goodsMapper.selectByExample(example);
         PageInfo<TbGoods> pageInfo = new PageInfo<>(list);
@@ -76,6 +90,105 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         //保存商品sku列表（每个sku都要保存到tb_item）
         saveItemList(goods);
+    }
+
+
+    /**
+     * 功能描述: 查找一个具体的商品信息
+     *
+     * @param: [id]
+     * @return: com.pinyougou.vo.Goods
+     * @auther: Leon
+     * @date: 2018/12/1 16:38
+     **/
+    @Override
+    public Goods findGoodsById(Long id) {
+        Goods goods = new Goods();
+        //查询商品spu
+        TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+        //封装商品基本信息
+        goods.setGoods(tbGoods);
+
+        //查询商品描述信息
+        TbGoodsDesc tbGoodsDesc = goodsDescMapper.selectByPrimaryKey(id);
+        //封装商品描述信息
+        goods.setGoodsDesc(tbGoodsDesc);
+
+        //查询商品的sku列表
+        Example example = new Example(TbItem.class);
+        example.createCriteria().andEqualTo("goodsId", id);
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+        //封装商品sku信息
+        goods.setItemList(itemList);
+
+        return goods;
+    }
+
+
+    /**
+     * 功能描述:修改商品信息
+     *
+     * @param: [goods]
+     * @return: com.pinyougou.vo.Result
+     * @auther: Leon
+     * @date: 2018/12/1 17:07
+     **/
+    @Override
+    public void updateGoods(Goods goods) {
+        //更新商品的基本信息
+        //修改过的话商品审核信息为未审核状态
+        goods.getGoods().setAuditStatus("0");
+        goodsMapper.updateByPrimaryKeySelective(goods.getGoods());
+
+        //更新商品的描述信息（spu列表）
+        goodsDescMapper.updateByPrimaryKeySelective(goods.getGoodsDesc());
+
+
+        //删除原有的商品的sku列表
+        TbItem param = new TbItem();
+        //添加删除的商品id
+        param.setGoodsId(goods.getGoods().getId());
+        //删除sku表中的详细信息
+        itemMapper.delete(param);
+
+        //保存新的商品sku列表
+        saveItemList(goods);
+    }
+
+    /**
+     * 功能描述:根据商品的spu id数据更新商品的状态
+     *
+     * @param: ids 商品的spu id数组
+     * @return:status 商品的状态
+     * @auther: Leon
+     * @date: 2018/12/1 17:23
+     **/
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        //update tb_goods set audit_status=1 where id  in (?,?,?)
+        TbGoods goods = new TbGoods();
+        goods.setAuditStatus(status);
+
+        Example example = new Example(TbGoods.class);
+
+        //设置查询条件；id
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+
+        //参数1：更新对象，参数2：更新条件
+        goodsMapper.updateByExampleSelective(goods, example);
+
+        //如果审核通过则需要更新商品SKU的上架或者下加架，如果状态为1,已启用
+        if ("2".equals(status)) {
+            TbItem item = new TbItem();
+            item.setStatus("1");
+
+            Example example1 = new Example(TbItem.class);
+            example.createCriteria().andIn("goodsId", Arrays.asList(ids));
+
+            //update tb_item set status='1' where goods_id in(?,?....)
+            //更新商品的上架信息
+            itemMapper.updateByExampleSelective(item, example);
+        }
     }
 
     /**
@@ -185,6 +298,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //修改商品基本信息表
         goodsMapper.updateByExampleSelective(goods, example);
     }
+
+
 
     
 }
