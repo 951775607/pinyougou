@@ -13,12 +13,14 @@ import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.*;
 
+@Transactional
 @Service(interfaceClass = GoodsService.class)
 public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsService {
     @Autowired
@@ -47,6 +49,10 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //如果删除的数据则不显示
         criteria.andNotEqualTo("isDelete", "1");
 
+
+        //如果是下架的信息则不显示
+//        criteria.andNotEqualTo("isMarketable", "2");
+//        criteria.andEqualTo("isMarketable", "1");
         //商家
         if(!StringUtils.isEmpty(goods.getSellerId())){
             criteria.andEqualTo("sellerId", goods.getSellerId());
@@ -250,8 +256,9 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
     public void updateMarketable(Long[] ids, String status) {
         if ("1".equals(status)) {
             updateGoodsStatus("1", ids);
-        } else {
-            updateGoodsStatus("2",ids);
+        }
+        if ("2".equals(status)){
+            updateGoodsStatus("2", ids);
         }
     }
    /**
@@ -272,8 +279,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         goodsMapper.updateByExampleSelective(goods, example);
 
         //设置商品sku表的上架和下架信息
-        TbItem tbItem = new TbItem();
-        tbItem.setStatus(status);
-        itemMapper.updateByExampleSelective(tbItem, example);
+//        TbItem tbItem = new TbItem();
+//        tbItem.setStatus(status);
+//        itemMapper.updateByExampleSelective(tbItem, example);
     }
 }

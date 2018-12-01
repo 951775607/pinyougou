@@ -35,7 +35,7 @@ app.service("goodsService",function ($http) {
     };
 
     this.updateMarketable = function (selectedIds, status) {
-        alert("2222222222222")
+        // alert("2222222222222");
         return $http.get("../goods/updateMarketable.do?ids=" + selectedIds + "&status=" + status)
     };
 });
