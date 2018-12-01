@@ -46,4 +46,14 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @date: 2018/12/1 17:23
      **/
     void updateStatus(Long[] ids, String status);
+
+    /**
+     * 功能描述: 运营商后台-商品管理【商品删除】
+     *
+     * @param: [ids]
+     * @return: com.pinyougou.vo.Result
+     * @auther: Leon
+     * @date: 2018/12/1 18:45
+     **/
+    void deleteGoodsByIds(Long[] ids);
 }

@@ -177,11 +177,13 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //参数1：更新对象，参数2：更新条件
         goodsMapper.updateByExampleSelective(goods, example);
 
-        //如果审核通过则需要更新商品SKU的上架或者下加架，如果状态为1,已启用
+        //如果审核通过则需要更新商品SKU的上架或者下架，如果状态为1,已启用
         if ("2".equals(status)) {
+            //更新的内容
             TbItem item = new TbItem();
             item.setStatus("1");
 
+            //更新条件
             Example example1 = new Example(TbItem.class);
             example.createCriteria().andIn("goodsId", Arrays.asList(ids));
 
@@ -285,7 +287,15 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         item.setSeller(seller.getName());
     }
 
-    //根据商品spu_id更新商品的删除状态
+    /**
+     * 功能描述：根据商品spu id更新商品的删除状态（is_delete）为已删除（值为1）
+     *
+     * @param: [ids]
+     * @return: com.pinyougou.vo.Result
+     * @auther: Leon
+     * @date: 2018/12/1 18:45
+     **/
+    @Override
     public void deleteGoodsByIds(Long[] ids) {
         TbGoods goods = new TbGoods();
         //设置商品删除状态，删除为1，未删除为0

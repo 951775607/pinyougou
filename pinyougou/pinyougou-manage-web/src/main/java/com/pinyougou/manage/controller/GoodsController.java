@@ -1,4 +1,4 @@
-package com.pinyougou.shop.controller;
+package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbGoods;
@@ -98,10 +98,18 @@ public class GoodsController {
         return Result.fail("修改失败");
     }
 
+    /**
+     * 功能描述: 运营商后台-商品管理【商品删除】
+     *
+     * @param: [ids]
+     * @return: com.pinyougou.vo.Result
+     * @auther: Leon
+     * @date: 2018/12/1 18:45
+     **/
     @GetMapping("/delete")
     public Result delete(Long[] ids) {
         try {
-            goodsService.deleteByIds(ids);
+            goodsService.deleteGoodsByIds(ids);
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
