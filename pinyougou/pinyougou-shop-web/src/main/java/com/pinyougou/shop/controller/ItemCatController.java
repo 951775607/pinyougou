@@ -1,56 +1,40 @@
 package com.pinyougou.shop.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.pinyougou.pojo.TbGoods;
-import com.pinyougou.sellergoods.service.GoodsService;
-import com.pinyougou.vo.Goods;
+import com.pinyougou.pojo.TbItemCat;
+import com.pinyougou.sellergoods.service.ItemCatService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 /**
- * 商品基本信息
+ * 商品分类信息
  * */
-@RequestMapping("/goods")
+@RequestMapping("/itemCat")
 @RestController
-public class GoodsController {
+public class ItemCatController {
 
     @Reference
-    private GoodsService goodsService;
+    private ItemCatService itemCatService;
 
     @RequestMapping("/findAll")
-    public List<TbGoods> findAll() {
-        return goodsService.findAll();
+    public List<TbItemCat> findAll() {
+        return itemCatService.findAll();
     }
 
     @GetMapping("/findPage")
     public PageResult findPage(@RequestParam(value = "page", defaultValue = "1")Integer page,
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
-        return goodsService.findPage(page, rows);
+        return itemCatService.findPage(page, rows);
     }
 
-    /**
-     * 商品的基本、描述、sku列表信息之后要保存到数据库中
-     * @param goods 商品信息
-     * @return 操作结果
-     */
     @PostMapping("/add")
-    public Result add(@RequestBody Goods goods) {
+    public Result add(@RequestBody TbItemCat itemCat) {
         try {
-            //设置商家信息
-            String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
-            //设置商品id
-            goods.getGoods().setSellerId(sellerId);
-            //设置商品的审核状态
-            goods.getGoods().setAuditStatus("0");
-
-//            goodsService.add(goods);
-            //添加商品
-            goodsService.addGoods(goods);
+            itemCatService.add(itemCat);
             return Result.ok("增加成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,14 +43,14 @@ public class GoodsController {
     }
 
     @GetMapping("/findOne")
-    public TbGoods findOne(Long id) {
-        return goodsService.findOne(id);
+    public TbItemCat findOne(Long id) {
+        return itemCatService.findOne(id);
     }
 
     @PostMapping("/update")
-    public Result update(@RequestBody TbGoods goods) {
+    public Result update(@RequestBody TbItemCat itemCat) {
         try {
-            goodsService.update(goods);
+            itemCatService.update(itemCat);
             return Result.ok("修改成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,7 +61,7 @@ public class GoodsController {
     @GetMapping("/delete")
     public Result delete(Long[] ids) {
         try {
-            goodsService.deleteByIds(ids);
+            itemCatService.deleteByIds(ids);
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,15 +71,27 @@ public class GoodsController {
 
     /**
      * 分页查询列表
-     * @param goods 查询条件
+     * @param itemCat 查询条件
      * @param page 页号
      * @param rows 每页大小
      * @return
      */
     @PostMapping("/search")
-    public PageResult search(@RequestBody  TbGoods goods, @RequestParam(value = "page", defaultValue = "1")Integer page,
+    public PageResult search(@RequestBody  TbItemCat itemCat, @RequestParam(value = "page", defaultValue = "1")Integer page,
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
-        return goodsService.search(page, rows, goods);
+        return itemCatService.search(page, rows, itemCat);
+    }
+
+    /**
+     * 根据父分类id查询其对应的所有子商品分类
+     * @param parentId 父分类id
+     * @return 商品分类列表
+     */
+    @GetMapping("/findByParentId")
+    public List<TbItemCat> findByParentId(Long parentId) {
+        TbItemCat itemCat = new TbItemCat();
+        itemCat.setParentId(parentId);
+        return itemCatService.findByWhere(itemCat);
     }
 
 }
