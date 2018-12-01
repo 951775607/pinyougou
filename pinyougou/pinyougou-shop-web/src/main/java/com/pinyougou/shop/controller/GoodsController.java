@@ -147,4 +147,26 @@ public class GoodsController {
         return Result.fail("更新商品状态失败");
     }
 
+
+    /**
+     * 功能描述:实现商品的上架与下架功能
+     *
+     * @param:ids,statues
+     * @return:Result
+     * @auther: Leon
+     * @date: 2018/12/1 19:39
+     **/
+    @GetMapping("/updateMarketable")
+    public Result updateMarketable(Long[] ids, String status) {
+        try {
+            //更新商品基本信息表中的状态信息
+            System.out.println("11111111111");
+            goodsService.updateMarketable(ids, status);
+            return Result.ok("更新商品状态成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新商品状态失败");
+    }
+
 }

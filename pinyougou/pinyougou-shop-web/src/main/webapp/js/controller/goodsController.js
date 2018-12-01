@@ -278,4 +278,26 @@ app.controller("goodsController", function ($scope, $controller, $location, good
             });
         }
     };
+
+    //修改商品的上下架信息
+    $scope.updateMarketable=function (status) {
+        if ($scope.selectedIds.length < Int16Array) {
+            alert("请选择商品");
+            return;
+        }
+        if (confirm("确定要更新选中的商品状态吗？")) {
+            alert("33333333333333333")
+            goodsService.updateMarketable($scope.selectedIds, status).success(function (response) {
+                alert("44444444444444")
+                if (response.success) {
+                    //刷新列表并清空选中的那些商品
+                    $scope.reloadList();
+                    $scope.selectedIds = [];
+                }else {
+                    alert(response.message);
+                }
+            });
+        }
+    }
+
 });

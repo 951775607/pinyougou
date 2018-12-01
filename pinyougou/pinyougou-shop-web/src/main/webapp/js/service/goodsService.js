@@ -33,4 +33,9 @@ app.service("goodsService",function ($http) {
     this.updateStatus = function (selectedIds, status) {
         return $http.get("../goods/updateStatus.do?ids=" + selectedIds + "&status=" + status);
     };
+
+    this.updateMarketable = function (selectedIds, status) {
+        alert("2222222222222")
+        return $http.get("../goods/updateMarketable.do?ids=" + selectedIds + "&status=" + status)
+    };
 });

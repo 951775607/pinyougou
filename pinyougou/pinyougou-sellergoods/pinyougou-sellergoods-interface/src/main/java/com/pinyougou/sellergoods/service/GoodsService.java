@@ -56,4 +56,14 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @date: 2018/12/1 18:45
      **/
     void deleteGoodsByIds(Long[] ids);
+
+    /**
+     * 功能描述:实现商品的上架与下架功能
+     *
+     * @param:ids,statues
+     * @return:Result
+     * @auther: Leon
+     * @date: 2018/12/1 19:39
+     **/
+     void updateMarketable(Long[] ids, String status);
 }
