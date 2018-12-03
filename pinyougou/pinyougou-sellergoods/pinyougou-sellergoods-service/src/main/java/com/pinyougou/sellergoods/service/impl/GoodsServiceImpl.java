@@ -257,8 +257,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         if ("1".equals(status)) {
             updateGoodsStatus("1", ids);
         }
-        if ("2".equals(status)){
-            updateGoodsStatus("2", ids);
+        if ("0".equals(status)){
+            updateGoodsStatus("0", ids);
         }
     }
    /**
@@ -271,7 +271,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
      **/
     private void updateGoodsStatus(String status, Long[] ids) {
         TbGoods goods = new TbGoods();
-        //设置商品上架状态，下架为2，上架为1
+        //设置商品上架状态，下架为0，上架为1
         goods.setIsMarketable(status);
 
         Example example = new Example(TbGoods.class);

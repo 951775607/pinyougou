@@ -52,7 +52,7 @@
                                         <button type="button" class="btn btn-default" ng-click="delete()"><i class="fa fa-trash-o"></i> 删除</button>
                                         <button type="button" class="btn btn-default" ng-click="updateStatus('1')"><i class="fa fa-trash-o"></i> 提交审核</button>
                                         <button type="button" class="btn btn-default" ng-click="updateMarketable('1')" title="上架" ><i class="fa fa-check"></i> 上架</button>
-                                        <button type="button" class="btn btn-default" ng-click="updateMarketable('2')" title="下架" ><i class="fa fa-check"></i> 下架</button>
+                                        <button type="button" class="btn btn-default" ng-click="updateMarketable('0')" title="下架" ><i class="fa fa-check"></i> 下架</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>
@@ -87,6 +87,7 @@
 									      <th class="sorting">二级分类</th>
 									      <th class="sorting">三级分类</th>
 									      <th class="sorting">状态</th>
+                                          <th class="sorting">是否上架</th>
 					                      <th class="text-center">操作</th>
 			                          </tr>
 			                      </thead>
@@ -102,6 +103,9 @@
 		                                  <td>
 		                                  		{{goodsStatus[entity.auditStatus]}}
 		                                  </td>
+                                          <td>
+                                              {{goodsMarketable[entity.isMarketable]}}
+                                          </td>
 		                                  <td class="text-center">
                                               <a href="goods_edit.html#?id={{entity.id}}" class="btn bg-olive btn-xs">修改</a>
 		                                  </td>

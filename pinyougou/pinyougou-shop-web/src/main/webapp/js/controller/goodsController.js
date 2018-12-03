@@ -237,6 +237,9 @@ app.controller("goodsController", function ($scope, $controller, $location, good
     //商品的状态
     $scope.goodsStatus = ["未审核","审核中","审核通过","审核未通过","关闭"];
 
+    //商品的上架状态
+    $scope.goodsMarketable = ["下架","上架"];
+
     //商品分类集合
     $scope.itemCatList = [];
     $scope.findItemCatList = function () {

@@ -160,7 +160,7 @@ public class GoodsController {
     public Result updateMarketable(Long[] ids, String status) {
         try {
             //更新商品基本信息表中的状态信息
-            System.out.println("11111111111");
+//            System.out.println("11111111111");
             goodsService.updateMarketable(ids, status);
             return Result.ok("更新商品状态成功");
         } catch (Exception e) {
