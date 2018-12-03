@@ -13,7 +13,9 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
-
+/**
+* 广告分类模板
+* */
 @Service(interfaceClass = ContentCategoryService.class)
 public class ContentCategoryServiceImpl extends BaseServiceImpl<TbContentCategory> implements ContentCategoryService {
 
