@@ -83,6 +83,7 @@ app.controller("contentController", function ($scope, $controller, contentServic
 
     //查询内容分类列表
     $scope.findContentCategoryList = function () {
+    $scope.findContentCategoryList = function () {
         contentCategoryService.findAll().success(function (response) {
             $scope.contentCategoryList = response;
         });
