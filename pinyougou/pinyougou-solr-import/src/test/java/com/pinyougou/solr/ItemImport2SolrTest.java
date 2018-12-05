@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * @Description TODO
  * @Author Leon
@@ -48,7 +49,6 @@ public class ItemImport2SolrTest {
         //保存sku列表
         solrTemplate.saveBeans(itemList);
         solrTemplate.commit();
-
 
     }
 
