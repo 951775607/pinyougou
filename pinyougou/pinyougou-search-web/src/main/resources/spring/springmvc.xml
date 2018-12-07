@@ -20,7 +20,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <!--引用dubbo服务-->
+    <!--  引用 dubbo  服务  -->
     <!--消费者名称-->
     <dubbo:application name="pinyougou-search-web"/>
     <!--注册中心地址-->
