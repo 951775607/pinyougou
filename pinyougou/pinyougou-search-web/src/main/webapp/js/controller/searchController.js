@@ -16,6 +16,19 @@ app.controller("searchController", function ($scope, searchService) {
         $scope.search();
     };
 
+    //删除过滤条件
+    $scope.removeSearchItem = function (key) {
+        if ("brand" == key || "category" == key || "price" == key) {
+            $scope.searchMap[key] = "";
+        } else {
+            //删除规格对象中的属性
+            delete $scope.searchMap.spec[key];
+        }
+        //查询
+        $scope.search();
+
+    };
+
 
     //搜索
     $scope.search = function () {

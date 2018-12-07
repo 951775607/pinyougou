@@ -150,10 +150,10 @@
 					</li>									
 				</ul>
 				<ul class="tags-choose">
-					<li class="tag" ng-if="searchMap.category !=''">商品分类：{{searchMap.category}}<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag" ng-if="searchMap.brand !=''">品牌：{{searchMap.brand}}<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag" ng-repeat="{key.value} in searchMap.spec">{{key}}：{{value}}<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">价格：500-1000<i class="sui-icon icon-tb-close"></i></li>
+					<li ng-if="searchMap.category != ''" ng-click="removeSearchItem('category')" class="tag">商品分类：{{searchMap.category}}<i class="sui-icon icon-tb-close"></i></li>
+					<li ng-if="searchMap.brand != ''" ng-click="removeSearchItem('brand')" class="tag">品牌：{{searchMap.brand}}<i class="sui-icon icon-tb-close"></i></li>
+					<li ng-repeat="(key,value) in searchMap.spec" ng-click="removeSearchItem(key)" class="tag">{{key}}：{{value}}<i class="sui-icon icon-tb-close"></i></li>
+					<li ng-if="searchMap.price != ''" ng-click="removeSearchItem('price')" class="tag">价格：{{searchMap.price}}<i class="sui-icon icon-tb-close"></i></li>
 					搜索结果：{{resultMap.total}}条
 					{{searchMap}}
 				</ul>
@@ -162,19 +162,19 @@
 			</div>
 			<!--selector-->
 			<div class="clearfix selector">
-				<div class="type-wrap" ng-if="searchMap.category ==''">
+				<div class="type-wrap" ng-if="searchMap.category==''">
 					<div class="fl key">商品分类</div>
 					<div class="fl value">
-                        <span>
+                 <span>
                             <a href="#" ng-click="addSearchItem('category','手机')">手机</a>
                         </span>
-                        <span>
+						<span>
                             <a href="#" ng-click="addSearchItem('category','平板电视')">平板电视</a>
                         </span>
                     </div>
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap logo" ng-if="searchMap.brand ==''">
+				<div class="type-wrap logo" ng-if="searchMap.brand==''">
 					<div class="fl key brand">品牌</div>
 					<div class="value logos">
 						<ul class="logo-list">
@@ -191,7 +191,7 @@
 						</ul>
 					</div>
 				</div>
-                <div class="type-wrap" ng-if="searchMap.spec[网络] ==null">
+                <div class="type-wrap" ng-if="searchMap.spec['网络']==null">
                     <div class="fl key">网络</div>
                     <div class="fl value">
                         <ul class="type-list">
@@ -217,7 +217,7 @@
                     </div>
                     <div class="fl ext"></div>
                 </div>
-                <div class="type-wrap">
+                <div class="type-wrap" ng-if="searchMap.spec['机身内存']==null">
                     <div class="fl key">机身内存</div>
                     <div class="fl value">
                         <ul class="type-list">
@@ -238,7 +238,7 @@
                     <div class="fl ext"></div>
                 </div>
 				
-				<div class="type-wrap">
+				<div class="type-wrap" ng-if="searchMap.price==''">
 					<div class="fl key">价格</div>
 					<div class="fl value">
 						<ul class="type-list">
