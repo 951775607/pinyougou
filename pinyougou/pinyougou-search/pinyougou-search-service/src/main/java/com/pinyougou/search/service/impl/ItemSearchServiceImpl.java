@@ -1,15 +1,13 @@
 package com.pinyougou.search.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
-import org.springframework.data.solr.core.query.Criteria;
-import org.springframework.data.solr.core.query.HighlightOptions;
-import org.springframework.data.solr.core.query.SimpleFilterQuery;
-import org.springframework.data.solr.core.query.SimpleHighlightQuery;
+import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.util.StringUtils;
@@ -181,6 +179,43 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         resultMap.put("totalPages", highlightPage.getTotalPages());
 
         return resultMap;
+    }
+
+    /**
+     * 功能描述:
+     *
+     * @param: 根据关键字搜索商品列表
+     * @return: 搜索结果
+     * @date: 2018/12/7 21:01
+     **/
+    @Override
+    public void importItemList(List<TbItem> itemList) {
+        if (itemList != null && itemList.size() > 0) {
+            for (TbItem tbItem : itemList) {
+                Map specMap = JSON.parseObject(tbItem.getSpec(), Map.class);
+                tbItem.setSpecMap(specMap);
+            }
+
+            //更新
+            solrTemplate.saveBeans(itemList);
+            solrTemplate.commit();
+        }
+    }
+
+
+    /**
+     * 功能描述:根据goodsId商品id集合删除其对应在solr中的商品数据
+     *
+     * @param: goodsId商品id集合
+     * @return:
+     * @date: 2018/12/7 21:08
+     **/
+    @Override
+    public void deleteItemByGoodsIdList(List<Long> goodsIdList) {
+        Criteria criteria = new Criteria("item_goodsid").in(goodsIdList);
+        SimpleQuery query = new SimpleQuery(criteria);
+        solrTemplate.delete(query);
+        solrTemplate.commit();
     }
 
 }

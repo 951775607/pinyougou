@@ -261,7 +261,24 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             updateGoodsStatus("0", ids);
         }
     }
-   /**
+
+    /**
+     * 功能描述:根据商品SPU id集合和状态查询这些商品对应的sku商品列表t
+     *
+     * @param: ids 商品spu id集合
+    status sku商品状态
+     * @return: sku商品列表
+     * @date: 2018/12/7 20:58
+     **/
+    @Override
+    public List<TbItem> findItemListByGoodsIdsAndStatus(Long[] ids, String status) {
+
+        Example example = new Example(TbItem.class);
+        example.createCriteria().andEqualTo("status", status).andIn("goodsId", Arrays.asList(ids));
+        return itemMapper.selectByExample(example);
+    }
+
+    /**
      * 功能描述:商品的上下架的具体实现
      *
      * @param:

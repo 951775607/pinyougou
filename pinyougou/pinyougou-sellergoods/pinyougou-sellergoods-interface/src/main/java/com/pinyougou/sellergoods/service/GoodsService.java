@@ -1,9 +1,12 @@
 package com.pinyougou.sellergoods.service;
 
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.service.BaseService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
+
+import java.util.List;
 
 public interface GoodsService extends BaseService<TbGoods> {
 
@@ -66,4 +69,14 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @date: 2018/12/1 19:39
      **/
      void updateMarketable(Long[] ids, String status);
+
+     /**
+      * 功能描述:根据商品SPU id集合和状态查询这些商品对应的sku商品列表
+      *
+      * @param: ids 商品spu id集合
+        status sku商品状态
+      * @return: sku商品列表
+      * @date: 2018/12/7 20:58
+      **/
+    List<TbItem> findItemListByGoodsIdsAndStatus(Long[] ids, String s);
 }
