@@ -89,23 +89,25 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
     @Override
     public Goods findGoodsById(Long id) {
-        Goods goods = new Goods();
-        /**
-         * SELECT * FROM tb_goods WHERE id=? ;
-         * SELECT * FROM tb_goods_desc WHERE goods_id=? ;
-         * SELECT * FROM tb_item WHERE goods_id=?;
-         */
-        //1、基本信息
-        goods.setGoods(findOne(id));
-        //2、描述信息
-        goods.setGoodsDesc(goodsDescMapper.selectByPrimaryKey(id));
-        //3、根据spu id 查询sku列表
-        TbItem item = new TbItem();
-        item.setGoodsId(id);
-        List<TbItem> itemList = itemMapper.select(item);
-        goods.setItemList(itemList);
 
-        return goods;
+        return findGoodsByIdAndStatus(id, null);
+//        Goods goods = new Goods();
+//        /**
+//         * SELECT * FROM tb_goods WHERE id=? ;
+//         * SELECT * FROM tb_goods_desc WHERE goods_id=? ;
+//         * SELECT * FROM tb_item WHERE goods_id=?;
+//         */
+//        //1、基本信息
+////        goods.setGoods(findOne(id));
+////        //2、描述信息
+////        goods.setGoodsDesc(goodsDescMapper.selectByPrimaryKey(id));
+////        //3、根据spu id 查询sku列表
+////        TbItem item = new TbItem();
+////        item.setGoodsId(id);
+////        List<TbItem> itemList = itemMapper.select(item);
+////        goods.setItemList(itemList);
+////
+//        return goods;
     }
 
     @Override
@@ -276,6 +278,46 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         Example example = new Example(TbItem.class);
         example.createCriteria().andEqualTo("status", status).andIn("goodsId", Arrays.asList(ids));
         return itemMapper.selectByExample(example);
+    }
+
+
+    /**
+     * 功能描述:根据商品id查询商品基本，描述，启用的sku列表
+     *
+     * @param: goodsId 商品的id
+     * @return: itemStatus是否启用
+     * @date: 2018/12/8 21:14
+     **/
+    @Override
+    public Goods findGoodsByIdAndStatus(Long goodsId,String itemStatus) {
+        Goods goods = new Goods();
+        /**
+         * SELECT * FROM tb_goods WHERE id=? ;
+         * SELECT * FROM tb_goods_desc WHERE goods_id=? ;
+         * SELECT * FROM tb_item WHERE goods_id=?;
+         */
+        //1、基本信息
+        goods.setGoods(findOne(goodsId));
+        //2、描述信息
+        goods.setGoodsDesc(goodsDescMapper.selectByPrimaryKey(goodsId));
+        //3、根据spu id 查询sku列表
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andEqualTo("goodsId", goodsId);
+
+        if (itemStatus != null) {
+            criteria.andEqualTo("status", itemStatus);
+        }
+
+        //根据是否默认降序排序sku列表
+        example.orderBy("isDefault").desc();
+
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+        goods.setItemList(itemList);
+
+        return goods;
+
     }
 
     /**

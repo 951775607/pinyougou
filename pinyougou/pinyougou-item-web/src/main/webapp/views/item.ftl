@@ -17,12 +17,12 @@
         //组装SKU列表
         var skuList = [
             <#list itemList as item>
-                {
-                    "id":"${item.id?c}",
-                    "title":"${item.title}",
-                    "price":"${item.price?c}",
-                    "spec":${item.spec}
-                },
+            {
+                "id":"${item.id?c}",
+                "title":"${item.title}",
+                "price":"${item.price?c}",
+                "spec":${item.spec}
+            },
             </#list>
         ];
 
@@ -33,7 +33,7 @@
 <!-- 头部栏位 -->
 <!--页面顶部开始-->
 <#include "head.ftl"/>
-<!--页面顶部结束-->
+    <!--页面顶部结束-->
 
 <#--图片列表-->
 <#assign imageList=goodsDesc.itemImages?eval />
@@ -136,22 +136,22 @@
                 <div class="clearfix choose">
                     <div id="specification" class="summary-wrap clearfix">
                         <#list specificationList as spec>
-                        <dl>
+                            <dl>
                             <dt>
-                                <div class="fl title">
-                                    <i>${spec.attributeName}</i>
-                                </div>
+                            <div class="fl title">
+                            <i>${spec.attributeName}</i>
+                            </div>
                             </dt>
                             <#list spec.attributeValue as option>
-                            <dd>
+                                <dd>
                                 <a href="javascript:;" class="{{isSelected('${spec.attributeName}','${option}')?'selected':''}}"
-                                   ng-click="selectSpecification('${spec.attributeName}','${option}')">
-                                    ${option}
-                                    <span title="点击取消选择">&nbsp;</span>
+                            ng-click="selectSpecification('${spec.attributeName}','${option}')">
+                                ${option}
+                                <span title="点击取消选择">&nbsp;</span>
                                 </a>
-                            </dd>
+                                </dd>
                             </#list>
-                        </dl>
+                            </dl>
                         </#list>
                     </div>
 
@@ -540,9 +540,9 @@
         </div>
     </div>
 </div>
-<!-- 底部栏位 -->
-<!--页面底部开始-->
-    <#include "foot.ftl"/>
+    <!-- 底部栏位 -->
+    <!--页面底部开始-->
+<#include "foot.ftl"/>
 <!--页面底部结束-->
 </body>
 
