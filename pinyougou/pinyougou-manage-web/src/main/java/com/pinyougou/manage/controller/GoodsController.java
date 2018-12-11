@@ -1,15 +1,21 @@
 package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.TbItem;
-import com.pinyougou.search.service.ItemSearchService;
+//import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import javax.jms.*;
 import java.util.List;
 
 
@@ -23,8 +29,27 @@ public class GoodsController {
     @Reference
     private GoodsService goodsService;
 
-    @Reference
-    private ItemSearchService itemSearchService;
+
+    //使用了mq，itemSearchService从这里解耦，更新solr的通知发送到mq
+    //然后itemSearchService也从mq获取消息,实现解耦操作
+    // @Reference
+    // private ItemSearchService itemSearchService;
+
+
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    //修改操作
+    @Autowired
+    private ActiveMQQueue itemSolrQueue;
+
+    //删除操作
+    @Autowired
+    private ActiveMQQueue itemSolrDeleteQueue;
+
+
+
 
 
     @RequestMapping("/findAll")
@@ -74,8 +99,13 @@ public class GoodsController {
     public Result delete(Long[] ids) {
         try {
             goodsService.deleteGoodsByIds(ids);
+
+
+            //更新搜索系统数据
+            //通过mq来实现消息通知，实现解耦，不用在这里更新索引，使用下面的方式来更新
             //删除solr中对应商品索引数据
-            itemSearchService.deleteItemByGoodsIdList(Arrays.asList(ids));
+//            itemSearchService.deleteItemByGoodsIdList(Arrays.asList(ids));
+            sendMQMsg(itemSolrDeleteQueue, ids);
 
             return Result.ok("删除成功");
         } catch (Exception e) {
@@ -83,6 +113,32 @@ public class GoodsController {
         }
         return Result.fail("删除失败");
     }
+
+
+    /**
+     * 功能描述:发送消息到ActiveMQ
+     *
+     * @param: destination 发送模式
+     * @param： ids 商品id集合
+     * @date: 2018/12/11 16:07
+     **/
+    private void sendMQMsg(Destination destination, Long[] ids) {
+        try {
+            jmsTemplate.send(destination, new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    ObjectMessage objectMessage = session.createObjectMessage();
+                    objectMessage.setObject(ids);
+                    return objectMessage;
+                }
+            });
+        } catch (JmsException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     /**
      * 分页查询列表
@@ -113,7 +169,24 @@ public class GoodsController {
                 List<TbItem> itemList = goodsService.findItemListByGoodsIdsAndStatus(ids, "1");
 
                 //更新搜索系统数据
-                itemSearchService.importItemList(itemList);
+                //通过mq来实现消息通知，实现解耦，不用在这里更新索引，使用下面的方式来更新
+                //itemSearchService.importItemList(itemList);
+                /**
+                 * 功能描述:发送通知到mq，搜索服务在mq查询到通知执行更新操作
+                 *
+                 * @param: [ids, status]
+                 * @return: com.pinyougou.vo.Result
+                 * @date: 2018/12/10 21:28
+                 **/
+                jmsTemplate.send(itemSolrQueue, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        TextMessage textMessage = session.createTextMessage();
+                        textMessage.setText(JSON.toJSONString(itemList));
+                        return textMessage;
+                    }
+                });
+
             }
 
             return Result.ok("更新商品状态成功");
