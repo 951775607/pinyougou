@@ -16,6 +16,7 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jms.*;
+
 import java.util.List;
 
 
@@ -33,7 +34,7 @@ public class GoodsController {
     //使用了mq，itemSearchService从这里解耦，更新solr的通知发送到mq
     //然后itemSearchService也从mq获取消息,实现解耦操作
     // @Reference
-    // private ItemSearchService itemSearchService;
+//     private ItemSearchService itemSearchService;
 
 
 
@@ -170,7 +171,7 @@ public class GoodsController {
 
                 //更新搜索系统数据
                 //通过mq来实现消息通知，实现解耦，不用在这里更新索引，使用下面的方式来更新
-                //itemSearchService.importItemList(itemList);
+//                itemSearchService.importItemList(itemList);
                 /**
                  * 功能描述:发送通知到mq，搜索服务在mq查询到通知执行更新操作
                  *
