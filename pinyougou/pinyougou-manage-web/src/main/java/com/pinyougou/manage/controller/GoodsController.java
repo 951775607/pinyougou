@@ -9,6 +9,7 @@ import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -48,6 +49,13 @@ public class GoodsController {
     //删除操作
     @Autowired
     private ActiveMQQueue itemSolrDeleteQueue;
+
+    //实现页面静态华
+    @Autowired
+    private ActiveMQTopic itemTopic;
+
+    @Autowired
+    private ActiveMQTopic itemDeleteTopic;
 
 
 
@@ -107,6 +115,9 @@ public class GoodsController {
             //删除solr中对应商品索引数据
 //            itemSearchService.deleteItemByGoodsIdList(Arrays.asList(ids));
             sendMQMsg(itemSolrDeleteQueue, ids);
+
+            //发送商品删除的订阅信息
+            sendMQMsg(itemDeleteTopic, ids);
 
             return Result.ok("删除成功");
         } catch (Exception e) {
@@ -187,6 +198,8 @@ public class GoodsController {
                         return textMessage;
                     }
                 });
+                //发送商品审核通过的订阅消息
+                sendMQMsg(itemTopic, ids);
 
             }
 

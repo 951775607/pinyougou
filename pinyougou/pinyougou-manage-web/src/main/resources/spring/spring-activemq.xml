@@ -35,4 +35,18 @@
         <constructor-arg value="pinyougou_item_solr_delete_queue"/>
     </bean>
 
+
+
+    <!--配置订阅/主题模式，实现一对多关系-->
+    <!--订阅模式，在商品审核后接收的商品主题-->
+    <bean id="itemTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="pinyougou_item_topic"/>
+    </bean>
+
+
+    <!--订阅模式，搜索系统在商品删除后接收的商品 id 队列 -->
+    <bean id="itemDeleteTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="pinyougou_item_delete_topic"/>
+    </bean>
+
 </beans>
