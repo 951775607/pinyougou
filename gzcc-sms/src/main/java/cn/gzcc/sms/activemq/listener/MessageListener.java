@@ -16,15 +16,14 @@ import java.util.Set;
 @Component
 public class MessageListener {
 
-//    private HttpClientUtil httpClientUtil;
-
-
-
+    @Autowired
+    private HttpClientUtil clientl;
 
     @JmsListener(destination = "itcast_sms_queue")
     public void receiveMsg(Map<String, String> map) {
 
-        HttpClientUtil client = HttpClientUtil.getInstance();
+//        HttpClientUtil client = HttpClientUtil.getInstance();
+        HttpClientUtil client = clientl.getInstance();
 
         Set<Map.Entry<String, String>> entries = map.entrySet();
         String Uid = map.get("Uid");
