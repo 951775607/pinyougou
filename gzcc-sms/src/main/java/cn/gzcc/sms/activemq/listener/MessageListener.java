@@ -1,7 +1,7 @@
 package cn.gzcc.sms.activemq.listener;
 
+
 import cn.gzcc.sms.util.HttpClientUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
@@ -16,14 +16,14 @@ import java.util.Set;
 @Component
 public class MessageListener {
 
-    @Autowired
-    private HttpClientUtil clientl;
+//    @Autowired
+//    private HttpClientUtil clientl;
 
     @JmsListener(destination = "itcast_sms_queue")
     public void receiveMsg(Map<String, String> map) {
 
-//        HttpClientUtil client = HttpClientUtil.getInstance();
-        HttpClientUtil client = clientl.getInstance();
+        HttpClientUtil client = HttpClientUtil.getInstance();
+//        HttpClientUtil client = clientl.getInstance();
 
         Set<Map.Entry<String, String>> entries = map.entrySet();
         String Uid = map.get("Uid");
@@ -34,7 +34,6 @@ public class MessageListener {
         System.out.println(Key);
         System.out.println(smsText);
         System.out.printf(smsMob);
-
 
         int result = client.sendMsgUtf8(Uid, Key, smsText, smsMob);
         if(result>0){
