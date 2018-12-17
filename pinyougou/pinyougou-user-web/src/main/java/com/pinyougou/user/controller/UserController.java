@@ -8,10 +8,13 @@ import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
 @RequestMapping("/user")
@@ -122,6 +125,21 @@ public class UserController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 功能描述:获取当前登录用户信息
+     *
+     * @param:
+     * @return: 用户信息
+     * @date: 2018/12/17 20:55
+     **/
+    @GetMapping("/getUsername")
+    public Map<String,Object> getUsername() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        map.put("username", username);
+        return map;
     }
 
 }
