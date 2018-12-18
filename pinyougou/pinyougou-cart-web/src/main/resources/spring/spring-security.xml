@@ -18,32 +18,38 @@
 
     <!-- entry-point-ref 入口点引用  -->
     <http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">
-        <!--符合的路径可以进行匿名访问，如果是未登录访问的话；那么获取到的用户名称为anonymousUser
-        如果登录才允许访问的话，去掉这句即可-->
+        <!--符合的路径可以进行匿名访问，如果是未登录访问的话；那么获取到的用户名称为anonymousUser-->
         <intercept-url pattern="/cart/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <intercept-url pattern="/**" access="ROLE_USER"/>
         <csrf disabled="true"/>
         <!-- custom-filter 为过滤器， position  表示将过滤器放在指定的位置上， before
         表示放在指定位置之前 ， after 表示放在指定的位置之后 -->
         <custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
-        <custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER"/>
+        <custom-filter ref="requestSingleLogoutFilter"
+                       before="LOGOUT_FILTER"/>
         <custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>
     </http>
 
     <!-- CAS 入口点 开始  -->
-    <beans:bean id="casProcessingFilterEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+    <beans:bean id="casProcessingFilterEntryPoint"
+                class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
         <!--  单点登录服务器登录 URL -->
-        <beans:property name="loginUrl" value="http://cas.pinyougou.com/login"/>
+        <beans:property name="loginUrl"
+                        value="http://cas.pinyougou.com/login"/>
         <beans:property name="serviceProperties" ref="serviceProperties"/>
     </beans:bean>
-    <beans:bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+    <beans:bean id="serviceProperties"
+                class="org.springframework.security.cas.ServiceProperties">
         <!--service  配置自身工程的根地址 +/login/cas -->
-        <beans:property name="service" value="http://cart.pinyougou.com/login/cas"/>
+        <beans:property name="service"
+                        value="http://cart.pinyougou.com/login/cas"/>
     </beans:bean>
     <!-- CAS 入口点 结束  -->
     <!--  认证过滤器 开始  -->
-    <beans:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
-        <beans:property name="authenticationManager" ref="authenticationManager"/>
+    <beans:bean id="casAuthenticationFilter"
+                class="org.springframework.security.cas.web.CasAuthenticationFilter">
+        <beans:property name="authenticationManager"
+                        ref="authenticationManager"/>
     </beans:bean>
 
     <!--  认证管理器  -->
@@ -51,12 +57,15 @@
         <authentication-provider ref="casAuthenticationProvider"/>
     </authentication-manager>
     <!--  认证类  -->
-    <beans:bean id="userDetailsService" class="com.pinyougou.cart.service.impl.UserDetailServiceImpl"/>
+    <beans:bean id="userDetailsService"
+                class="com.pinyougou.cart.service.impl.UserDetailServiceImpl"/>
 
     <!--  认证提供者  -->
-    <beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+    <beans:bean id="casAuthenticationProvider"
+                class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
         <beans:property name="authenticationUserDetailsService">
-            <beans:bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+            <beans:bean
+                    class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
                 <beans:constructor-arg ref="userDetailsService"/>
             </beans:bean>
         </beans:property>
@@ -64,20 +73,26 @@
         <beans:property name="serviceProperties" ref="serviceProperties"/>
         <!-- ticketValidator  为票据验证器  -->
         <beans:property name="ticketValidator">
-            <beans:bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
-                <beans:constructor-arg index="0" value="http://cas.pinyougou.com"/>
+            <beans:bean
+                    class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+                <beans:constructor-arg index="0"
+                                       value="http://cas.pinyougou.com"/>
             </beans:bean>
         </beans:property>
-        <beans:property name="key" value="an_id_for_this_auth_provider_only"/>
+        <beans:property name="key"
+                        value="an_id_for_this_auth_provider_only"/>
     </beans:bean>
-
     <!--  认证过滤器 结束  -->
     <!--  单点登出 开始 -->
-    <beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
-    <beans:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-        <beans:constructor-arg value="http://cas.pinyougou.com/logout?service=http://cart.pinyougou.com"/>
+    <beans:bean id="singleLogoutFilter"
+                class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+    <beans:bean id="requestSingleLogoutFilter"
+                class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <beans:constructor-arg
+                value="http://cas.pinyougou.com/logout?service=http://cart.pinyougou.com"/>
         <beans:constructor-arg>
-            <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+            <beans:bean
+                    class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
         </beans:constructor-arg>
         <beans:property name="filterProcessesUrl" value="/logout/cas"/>
     </beans:bean>
