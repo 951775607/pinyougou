@@ -62,15 +62,30 @@ app.controller("itemController", function ($scope, $http) {
         $scope.sku = {"id": 0, "title": "-----", "price": 0};
     };
 
+
+    //设置允许跨域请求后，下面的方法是未设置允许跨域请求
     $scope.addToCart = function () {
         $http.get("http://cart.pinyougou.com/cart/addItemToCartList.do?itemId="
             + $scope.sku.id + "&num=" + $scope.num,{"withCredentials":true})
             .success(function (response) {
                 if (response.success) {
+                    //从item.pinyougou.com跳转到cart.pinyougou.com属于跨域请求
                     location.href = "http://cart.pinyougou.com";
                 } else {
                     alert(response.message);
                 }
             });
     };
+    //未设置允许跨域请求
+    // $scope.addToCart = function () {
+    //     $http.get("http://cart.pinyougou.com/cart/addItemToCartList.do?itemId="
+    //         + $scope.sku.id + "&num=" + $scope.num)
+    //         .success(function (response) {
+    //             if (response.success) {
+    //                 location.href = "http://cart.pinyougou.com";
+    //             } else {
+    //                 alert(response.message);
+    //             }
+    //         });
+    // };
 });

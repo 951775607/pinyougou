@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/goods")
 @RestController
 public class GoodsController {
-
     @Reference
     private GoodsService goodsService;
 

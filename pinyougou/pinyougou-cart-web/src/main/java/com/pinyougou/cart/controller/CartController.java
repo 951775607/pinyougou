@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,7 +57,8 @@ public class CartController {
      * @return: num购买数量
      **/
     @GetMapping("/addItemToCartList")
-//    @CrossOrigin(origins = "http://item.pinyougou.com", allowCredentials = "true")
+//    如果使用了mvc的开发模式，可以使用注解的方式来设置允许跨域请求，如果不是的话就使用方式二，用response来设置允许
+    @CrossOrigin(origins = "http://item.pinyougou.com", allowCredentials = "true")
     public Result addItemToCartList(Long itemId, Integer num) {
 
         //设置允许哪些域名的服务器可以获得资源，允许跨域请求响应

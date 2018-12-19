@@ -110,6 +110,8 @@ public class GoodsController {
             goodsService.deleteGoodsByIds(ids);
 
 
+
+
             //更新搜索系统数据
             //通过mq来实现消息通知，实现解耦，不用在这里更新索引，使用下面的方式来更新
             //删除solr中对应商品索引数据

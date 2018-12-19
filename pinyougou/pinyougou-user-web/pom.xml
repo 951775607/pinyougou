@@ -91,7 +91,7 @@
                 <configuration>
                     <path>/</path>
                     <port>9105</port>
-                </configuration>
+            </configuration>
             </plugin>
         </plugins>
     </build>
