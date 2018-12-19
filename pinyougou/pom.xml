@@ -25,6 +25,7 @@
         <module>pinyougou-user</module>
         <module>pinyougou-cart</module>
         <module>pinyougou-cart-web</module>
+        <module>pinyougou-order</module>
     </modules>
     <dependencies>
         <dependency>
