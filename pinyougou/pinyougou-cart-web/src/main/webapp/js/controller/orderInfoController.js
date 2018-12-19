@@ -49,7 +49,7 @@ app.controller("orderInfoController", function ($scope, addressService, cartServ
         return $scope.address==address;
     };
 
-    //初始化支付方式；微信支付为1，货到付款为2
+    //订单，初始化支付方式；微信支付为1，货到付款为2
     $scope.order = {"paymentType":"1"};
 
     //选择支付类型
