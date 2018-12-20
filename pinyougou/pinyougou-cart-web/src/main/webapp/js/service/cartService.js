@@ -9,11 +9,13 @@ app.service("cartService", function ($http) {
 
     };
 
+    //创建详情订单表
     this.addItemToCartList = function (itemId, num) {
         return $http.get("cart/addItemToCartList.do?itemId=" + itemId + "&num=" + num);
 
     };
 
+    //算出商品总数和总价格
     this.subTotalValue = function (cartList) {
         var totalValue = {"totalNum":0, "totalMoney":0.0};
         for (var i = 0; i < cartList.length; i++) {
@@ -28,6 +30,7 @@ app.service("cartService", function ($http) {
 
     };
 
+    //提交订单
     this.submitOrder = function (order) {
         return $http.post("order/add.do", order);
 

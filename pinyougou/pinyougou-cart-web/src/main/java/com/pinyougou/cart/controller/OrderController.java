@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbOrder;
 import com.pinyougou.order.service.OrderService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +31,17 @@ public class OrderController {
     @PostMapping("/add")
     public Result add(@RequestBody TbOrder order) {
         try {
-            orderService.add(order);
-            return Result.ok("增加成功");
+            String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+            order.setUserId(userId);
+            //终端类型 1:app端，2：pc端，3：M端，4：微信端，5：手机qq端',
+            order.setSourceType("2");
+            //如果为微信支付则可以返回支付日志id
+            String outTradeNo = orderService.addOrder(order);
+            return Result.ok(outTradeNo);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("增加失败");
+        return Result.fail("提交订单失败");
     }
 
     @GetMapping("/findOne")
