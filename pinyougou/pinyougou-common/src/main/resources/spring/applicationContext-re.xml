@@ -3,24 +3,25 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--加载配置文件-->
-    <context:property-placeholder location="classpath:properties/redis-config.properties"/>
-    <!--配置 poolConfig-->
+    <!--引入配置文件-->
+    <context:property-placeholder location="classpath:properties/*.properties"/>
+
+    <!--配置连接池配置对象-->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxTotal" value="${redis.maxTotal}"/>
         <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxTotal" value="${redis.maxTotal}"/>
         <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
     </bean>
 
-    <!--配置 RedisConnectionFactory-->
-    <bean id="redisConnectionFactory"
-          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="poolConfig" ref="poolConfig"/>
+    <!--配置jedisConnectionFactory-->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <constructor-arg name="poolConfig" ref="poolConfig"/>
         <property name="hostName" value="${redis.hostName}"/>
         <property name="port" value="${redis.port}"/>
     </bean>
-    <!--配置 redisTemplate-->
+
+    <!--配置redisTemplate-->
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-        <property name="connectionFactory" ref="redisConnectionFactory"/>
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
     </bean>
 </beans>

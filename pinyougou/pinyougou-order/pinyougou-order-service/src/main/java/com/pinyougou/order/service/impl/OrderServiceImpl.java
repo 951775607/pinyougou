@@ -152,4 +152,17 @@ public class OrderServiceImpl extends BaseServiceImpl<TbOrder> implements OrderS
         //6. 返回支付日志id
         return outTradeNo;
     }
+
+
+    /**
+     * 功能描述:将购物车列表中的商品保存成订单基本，明细信息和支付日志信息
+     *
+     * @param: order订单基本信息
+     * @return: 支付业务id
+     **/
+    @Override
+    public TbPayLog findPayLogByOutTradeNo(String outTradeNo) {
+
+        return payLogMapper.selectByPrimaryKey(outTradeNo);
+    }
 }
