@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -164,5 +165,34 @@ public class OrderServiceImpl extends BaseServiceImpl<TbOrder> implements OrderS
     public TbPayLog findPayLogByOutTradeNo(String outTradeNo) {
 
         return payLogMapper.selectByPrimaryKey(outTradeNo);
+    }
+
+
+    /**
+     * 功能描述:根据支付日志id更新订单支付状态和支付日志支付状态为已支付
+     *
+     * @param: outTradeNo 支付日志id
+     * @return: transactionId 微信中对应的支付id
+     **/
+    @Override
+    public void updateOrderStatus(String outTradeNo, String transactionId) {
+        //更新支付日志支付状态
+        TbPayLog payLog = findPayLogByOutTradeNo(outTradeNo);
+        payLog.setTradeState("1");
+        payLog.setPayTime(new Date());
+        payLog.setTransactionId(transactionId);
+        payLogMapper.updateByPrimaryKeySelective(payLog);
+
+        //更新支付日志中 对应的每一笔订单的支付状态
+        String[] orderIds = payLog.getOrderList().split(",");
+
+        TbOrder order = new TbOrder();
+        order.setPaymentTime(new Date());
+        order.setStatus("2");
+
+        Example example = new Example(TbOrder.class);
+        example.createCriteria().andIn("orderId", Arrays.asList(orderIds));
+        orderMapper.updateByExampleSelective(order, example);
+
     }
 }

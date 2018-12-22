@@ -28,7 +28,7 @@ app.controller("payController", function ($scope, $location, cartService, paySer
                     value:response.code_url
                 });
 
-                //查询支付状态
+                //查询订单支付状态
                 queryPayStatus($scope.outTradeNo);
             } else {
                 alert("生成二维码失败！");
@@ -38,6 +38,7 @@ app.controller("payController", function ($scope, $location, cartService, paySer
 
     };
 
+    //查询支付状态
     queryPayStatus = function (outTradeNo) {
         payService.queryPayStatus(outTradeNo).success(function (response) {
             if(response.success){
@@ -58,10 +59,9 @@ app.controller("payController", function ($scope, $location, cartService, paySer
 
     };
 
+    //获取消费总金额
     $scope.loadMoney = function () {
-
         $scope.money = $location.search()["money"];
-
     };
 
 

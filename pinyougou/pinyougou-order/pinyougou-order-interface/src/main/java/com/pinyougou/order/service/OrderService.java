@@ -24,4 +24,13 @@ public interface OrderService extends BaseService<TbOrder> {
      * @return: 支付业务id
      **/
     TbPayLog findPayLogByOutTradeNo(String outTradeNo);
+
+
+    /**
+     * 功能描述:根据支付日志id更新订单支付状态和支付日志支付状态为已支付
+     *
+     * @param: outTradeNo 支付日志id
+     * @return: transactionId 微信中对应的支付id
+     **/
+    void updateOrderStatus(String outTradeNo, String transactionId);
 }
